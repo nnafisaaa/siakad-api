@@ -38,6 +38,34 @@ app.get('/get-student-by-id', (req, res) => {
 });
 
 // =======================
+// POST /store-student
+// =======================
+app.post('/store-student', (req, res) => {
+  const { name, major } = req.body;
+
+  if (!name || !major) {
+    return res.status(400).json({
+      success: false,
+      message: 'Name and major are required'
+    });
+  }
+
+  const queryStr = 'INSERT INTO student (name, major) VALUES (?, ?)';
+  conn.query(queryStr, [name, major], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.sqlMessage });
+    res.status(201).json({
+      success: true,
+      message: 'Student successfully created',
+      data: {
+        id: result.insertId,
+        name,
+        major
+      }
+    });
+  });
+});
+
+// =======================
 // POST /update-student
 // =======================
 app.post('/update-student', (req, res) => {
@@ -96,7 +124,6 @@ app.get('/items', (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
 
-  // Hitung total items
   const countQuery = 'SELECT COUNT(*) AS total FROM items';
   conn.query(countQuery, (err, countResult) => {
     if (err) return res.status(500).json({ success: false, message: err.sqlMessage });
@@ -104,7 +131,6 @@ app.get('/items', (req, res) => {
     const totalItems = countResult[0].total;
     const totalPages = Math.ceil(totalItems / limit);
 
-    // Ambil data paginated
     const dataQuery = 'SELECT * FROM items LIMIT ? OFFSET ?';
     conn.query(dataQuery, [limit, offset], (err, data) => {
       if (err) return res.status(500).json({ success: false, message: err.sqlMessage });
