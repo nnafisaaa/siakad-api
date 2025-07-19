@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const conn = require('./config/db');
-const authRouter = require('../auth');
+const authRouter = require('./auth');
 
 app.use(express.json());
 
