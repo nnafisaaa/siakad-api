@@ -95,5 +95,4 @@ Server runs on `http://localhost:3000`
 feat(talent-growth): add student CRUD and auth features
 ```
 
-https://drive.google.com/drive/folders/1bhdE5vjYoAXzOhwJflfENnhfcnU-0Ej8?usp=drive_link
 
